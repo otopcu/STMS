@@ -98,24 +98,25 @@ namespace stms
       //federate.EnableTimeRegulation(federate.Lookahead); // Lookahead is where this federate guarantees that it won't send any TSO message during this period
       federate.EnableTimeConstrained();
 
-      // DDM Initialization
+      // Various RTI Service Tests
+
+      //// DDM tests
+      //// DDM Initialization
       //if (station.Location == LocationEnum.West)// create region according to the location
       //  federate.CreateWestRegion();
       //else
       //  federate.CreateEastRegion();
+      //// Create a list of attribute set and region set pairs
+      //AttributeHandleSetRegionHandleSetPairVector pairs = new AttributeHandleSetRegionHandleSetPairVector();
+      //// Construct the region set
+      //List<HlaRegion> regions = new List<HlaRegion>();
+      //regions.Add(federate.aor1);
+      //// Populate the pairs. Here we use all the attributes of the object
+      //pairs.Pairs.Add(new KeyValuePair<List<HlaAttribute>, List<HlaRegion>>(federate.Som.ShipOC.Attributes, regions));
+      //federate.subscribeObjectClassAttributesWithRegions(federate.Som.ShipOC, pairs);
+      //federate.RequestAttributeValueUpdateWithRegions(federate.Som.ShipOC, pairs, "user-supplied tag");
+      //federate.UnsubscribeObjectClassWithRegions(federate.Som.ShipOC, pairs);
 
-      // Various RTI Service Tests
-      // DDM tests
-      // Create a list of attribute set and region set pairs
-      AttributeHandleSetRegionHandleSetPairVector pairs = new AttributeHandleSetRegionHandleSetPairVector();
-      // Construct the region set
-      List<HlaRegion> regions = new List<HlaRegion>();
-      regions.Add(federate.aor1);
-      // Populate the pairs. Here we use all the attributes of the object
-      pairs.Pairs.Add(new KeyValuePair<List<HlaAttribute>, List<HlaRegion>>(federate.Som.ShipOC.Attributes, regions));
-      federate.subscribeObjectClassAttributesWithRegions(federate.Som.ShipOC, pairs);
-      federate.RequestAttributeValueUpdateWithRegions(federate.Som.ShipOC, pairs, "user-supplied tag");
-      federate.UnsubscribeObjectClassWithRegions(federate.Som.ShipOC, pairs);
       //// FM tests
       //// Federate Save and Restore
       //federate.RequestFederationSave("Save_BeforeLunch");

@@ -225,7 +225,7 @@ namespace stms
         manager.StationObjects.Add(newStation);
 
         // Request Update Values of Attributes        
-        RequestAttributeValueUpdate(newStation);
+        RequestAttributeValueUpdate(newStation, null);
       }
       #endregion //User Code
     }

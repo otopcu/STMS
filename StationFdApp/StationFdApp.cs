@@ -215,7 +215,7 @@ namespace stms
         // hook to track event
         track.OutOfZone += HandleTrackOutOfZone;
         // Request Update Values of Attributes        
-        RequestAttributeValueUpdate(newShip);
+        RequestAttributeValueUpdate(newShip, null);
         // register the track object
         RegisterHlaObject(track);
       }
@@ -228,7 +228,7 @@ namespace stms
 
         // Request Update Values of Attributes        
         // (1) Request update values of all attributes for a specific object instance
-        RequestAttributeValueUpdate(newStation);
+        RequestAttributeValueUpdate(newStation, null);
       }
       #endregion //User Code
     }
