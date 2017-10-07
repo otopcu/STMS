@@ -2,11 +2,11 @@
 //		FederateSom
 //
 //		generated
-//			by		: 	Simulation Generator (SimGe) v.0.2.9
-//			at		: 	Friday, December 16, 2016 8:10:19 PM
-//		compatible with		: 	RACoN v.0.0.2.1
+//			by		: 	Simulation Generator (SimGe) v.0.3.0
+//			at		: 	Saturday, October 7, 2017 12:27:52 PM
+//		compatible with		: 	RACoN v.0.0.2.3
 //
-//		copyright		: 	(C) 2016 Okan Topcu
+//		copyright		: 	(C) 2016-2017 Okan Topcu
 //		email			: 	otot.support@outlook.com
 // **************************************************************************************************
 /// <summary>
@@ -33,12 +33,12 @@ namespace stms.Som
     public stms.Som.CTrackOC TrackOC;
     public stms.Som.CRadioMessageIC RadioMessageIC;
     public HlaDimension AreaOfResponsibility;
-    // HLA13
-    public stms.Som.CCommunicationSpace CommunicationSpace;
-    public stms.Som.CAreaSpace AreaSpace;
+    public HlaDimension RadioChannel;
+    public stms.Som.CCommunicationSpace CommunicationSpace;// HLA13
+    public stms.Som.CAreaSpace AreaSpace;// HLA13
     #endregion
     #endregion //Declarations
-    
+
     #region Constructor
     public FederateSom() : base()
     {
@@ -51,13 +51,13 @@ namespace stms.Som
       AddToObjectModel(TrackOC);
       RadioMessageIC = new stms.Som.CRadioMessageIC();
       AddToObjectModel(RadioMessageIC);
-      // Add Dimensions
       AreaOfResponsibility = new HlaDimension("AreaOfResponsibility");
       AddToObjectModel(AreaOfResponsibility);
-      // HLA13
-      CommunicationSpace = new stms.Som.CCommunicationSpace();
+      RadioChannel = new HlaDimension("RadioChannel");
+      AddToObjectModel(RadioChannel);
+      CommunicationSpace = new stms.Som.CCommunicationSpace();// HLA13
       AddToObjectModel(CommunicationSpace);
-      AreaSpace = new stms.Som.CAreaSpace();
+      AreaSpace = new stms.Som.CAreaSpace();// HLA13
       AddToObjectModel(AreaSpace);
     }
     #endregion //Constructor

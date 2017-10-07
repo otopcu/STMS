@@ -2,21 +2,24 @@
 //		FederateSom
 //
 //		generated
-//			by		: 	Simulation Generator (SimGe) v.0.2.8
-//			at		: 	Sunday, November 20, 2016 10:41:35 PM
-//		compatible with		: 	RACoN v.0.0.2.1
+//			by		: 	Simulation Generator (SimGe) v.0.3.0
+//			at		: 	Saturday, October 7, 2017 12:30:48 PM
+//		compatible with		: 	RACoN v.0.0.2.3
 //
-//		copyright		: 	(C) 2016 Okan Topcu
+//		copyright		: 	(C) 2016-2017 Okan Topcu
 //		email			: 	otot.support@outlook.com
 // **************************************************************************************************
 /// <summary>
 /// This class is extended from the object model of RACoN API
 /// </summary>
 
+// System
 using System;
 // Racon
 using Racon;
 using Racon.RtiLayer;
+// Application
+using stms.Som;
 
 
 namespace stms.Som
@@ -27,9 +30,9 @@ namespace stms.Som
     #region SOM Declaration
     public stms.Som.CShipOC ShipOC;
     public stms.Som.CStationOC StationOC;
-    public HlaDimension AreaOfResponsibility;
     public stms.Som.CRadioMessageIC RadioMessageIC;
-    public stms.Som.CCommunicationSpace CommunicationSpace;
+    public HlaDimension AreaOfResponsibility;
+    public stms.Som.CCommunicationSpace CommunicationSpace;// HLA13
     #endregion
     #endregion //Declarations
 
@@ -43,10 +46,9 @@ namespace stms.Som
       AddToObjectModel(StationOC);
       RadioMessageIC = new stms.Som.CRadioMessageIC();
       AddToObjectModel(RadioMessageIC);
-      // Add Dimensions
       AreaOfResponsibility = new HlaDimension("AreaOfResponsibility");
       AddToObjectModel(AreaOfResponsibility);
-      CommunicationSpace = new stms.Som.CCommunicationSpace();
+      CommunicationSpace = new stms.Som.CCommunicationSpace();// HLA13
       AddToObjectModel(CommunicationSpace);
     }
     #endregion //Constructor

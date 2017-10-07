@@ -166,6 +166,7 @@ namespace stms
       double list;
       bool res4 = federate.QueryLITS(out list);
       bool res3 = federate.QueryLITS();
+
       //// HLA13 calls
       //time = federate.QueryFederateTime();
       //galt = federate.QueryLBTS();
@@ -176,6 +177,7 @@ namespace stms
       //Console.WriteLine("Lookahead: " + federate.QueryLookahead()); // modified lookahead
 
       //federate.FlushQueueRequest(time + lookahead);
+
       // *************************************************
       // Shutdown
       // *************************************************
