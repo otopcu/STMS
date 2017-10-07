@@ -21,7 +21,6 @@ using Racon.RtiLayer;
 // Application
 using stms.Som;
 
-
 namespace stms.Som
 {
   public class FederateSom : Racon.ObjectModel.CObjectModel
