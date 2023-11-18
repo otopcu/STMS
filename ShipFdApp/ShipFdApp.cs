@@ -482,19 +482,19 @@ namespace stms
       ship.AddAttributeValue(Som.ShipOC.Heading, (uint)ship.Ship.Heading);
       ship.AddAttributeValue<PositionType>(Som.ShipOC.Position, ship.Ship.Position);
       ship.AddAttributeValue(Som.ShipOC.Speed, (uint)ship.Ship.Speed);
-      UpdateAttributeValues(ship);
+      UpdateAttributeValues(ship, "UserSuppliedTag"); // Provide a reason for the update as "UserSuppliedTag"
     }
     private void UpdateName(CShipHlaObject ship)
     {
       // Add Values
       ship.AddAttributeValue(Som.ShipOC.Callsign, ship.Ship.Callsign);
-      UpdateAttributeValues(ship);
+      UpdateAttributeValues(ship, "UserSuppliedTag");
     }
     private void UpdateHeading(CShipHlaObject ship)
     {
       // Add Values
       ship.AddAttributeValue(Som.ShipOC.Heading, (uint)ship.Ship.Heading);
-      UpdateAttributeValues(ship);
+      UpdateAttributeValues(ship, "UserSuppliedTag");
 
       // Update attribute using a logical timestamp
       //EventRetractionHandle handle = UpdateAttributeValues(user, 3.14);
@@ -503,13 +503,13 @@ namespace stms
     {
       // Add Values
       ship.AddAttributeValue<PositionType>(Som.ShipOC.Position, ship.Ship.Position);
-      UpdateAttributeValues(ship);
+      UpdateAttributeValues(ship, "UserSuppliedTag");
     }
     private void UpdateSpeed(CShipHlaObject ship)
     {
       // Add Values
       ship.AddAttributeValue(Som.ShipOC.Speed, (uint)ship.Ship.Speed);
-      UpdateAttributeValues(ship);
+      UpdateAttributeValues(ship, "UserSuppliedTag");
     }
     // report
     private void Report(string txt)
