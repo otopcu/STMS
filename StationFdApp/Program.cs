@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
+//using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 //Racon
 using Racon;
-using Racon.RtiLayer;
+//using Racon.RtiLayer;
 // Application
 using stms.Som;
 
 namespace stms
 {
+  // This federate application uses RTI Methods
   public class Program
   {
     static CStationHlaObject station;
@@ -29,12 +30,12 @@ namespace stms
     static void Main(string[] args)
     {
       // *************************************************
-      // Initialization
+      // Initialization with Low-level Racon Services
       // *************************************************
       // Instantiation
       federate = new CStationFdApp();// Initialize the application-specific federate
       // Local data
-      station = new CStationHlaObject(federate.Som.StationOC);// local object
+      station = new CStationHlaObject(federate.Som.StationOC);// local station object that is simulated by this app.
       StationObjects = new BindingList<CStationHlaObject>();
       ShipObjects = new BindingList<CShipHlaObject>();
       MyTracks = new BindingList<CTrackHlaObject>();
@@ -50,7 +51,7 @@ namespace stms
       federate.StatusMessageChanged += Federate_StatusMessageChanged;
       federate.LogLevel = LogLevel.ALL;
 
-      // initialization of station Properties
+      // initialization of local station properties
       Console.ForegroundColor = ConsoleColor.Yellow;
       setStationConfiguration(); // get user input
       Console.Title = "StationFdApp: " + station.StationName; // set console title
@@ -66,16 +67,34 @@ namespace stms
       federate.FederationExecution.FederateType = "StationFederate";
       federate.FederationExecution.ConnectionSettings = "rti://127.0.0.1";
       federate.FederationExecution.FDD = @".\StmsFom.xml";
+      // FM
       // Connect
       federate.Connect(CallbackModel.EVOKED, federate.FederationExecution.ConnectionSettings);
       // Create federation execution
       federate.CreateFederationExecution(federate.FederationExecution.Name, federate.FederationExecution.FomModules);
-      // Join federation execution
-      federate.JoinFederationExecution(federate.FederationExecution.FederateName, federate.FederationExecution.FederateType, federate.FederationExecution.Name, federate.FederationExecution.FomModules);
-     
-      // Declare Capability
-      federate.DeclareCapability();
+      // Join federation execution without providing a federate name
+      federate.JoinFederationExecution(federate.FederationExecution.FederateType, federate.FederationExecution.Name, federate.FederationExecution.FomModules);
+      // Join federation execution by providing a unique federate name
+      //bool joined = federate.JoinFederationExecution(federate.FederationExecution.FederateName, federate.FederationExecution.FederateType, federate.FederationExecution.Name, federate.FederationExecution.FomModules);
 
+      // DM
+      // Declare data capabilities (P/S)
+      // (1) First Method = Using Racon high-level methods
+      //if (federate.FederateState.HasFlag(FederateStates.JOINED))
+        federate.DeclareCapability();
+      // (2) Second Method = Using RTI methods
+      if (federate.FederateState.HasFlag(FederateStates.JOINED))
+      {
+        // OCs
+        federate.PublishObjectClass(federate.Som.StationOC, federate.Som.StationOC.Attributes);
+        federate.SubscribeObjectClass(federate.Som.StationOC, federate.Som.StationOC.Attributes, true, "High");
+        federate.PublishObjectClass(federate.Som.TrackOC, federate.Som.TrackOC.Attributes);
+        federate.SubscribeObjectClass(federate.Som.TrackOC, federate.Som.TrackOC.Attributes, true, "High");
+        federate.SubscribeObjectClass(federate.Som.ShipOC, federate.Som.ShipOC.Attributes, true, "High");
+        // ICs
+        federate.PublishInteractionClass(federate.Som.RadioMessageIC);
+        federate.SubscribeInteractionClass(federate.Som.RadioMessageIC);
+      }
       //// Initialize the second federation execution
       //CStationFdApp federateForBosporus = new CStationFdApp();
       //federateForBosporus.StatusMessageChanged += Federate_StatusMessageChanged;
@@ -94,11 +113,34 @@ namespace stms
       //federateForBosporus.DeclareCapability();
 
       // TM Initialization
+      federate.Lookahead = 1;
+      federate.Time = 0;
       federate.EnableAsynchronousDelivery();
-      //federate.EnableTimeRegulation(federate.Lookahead); // Lookahead is where this federate guarantees that it won't send any TSO message during this period
+      federate.EnableTimeRegulation(federate.Lookahead); // Lookahead is where this federate guarantees that it won't send any TSO message during this period
       federate.EnableTimeConstrained();
 
       // Various RTI Service Tests
+      // FM Tests
+      //federate.ListFederationExecutions();
+      string name = federate.GetFederateName(federate.FederateHandle); // throws HandleNotValid exception
+      //federate.GetFederateHandle(federate.FederationExecution.FederateName);// throws exception
+      //// Federate Save and Restore
+      //federate.RequestFederationSave("Save_BeforeLunch");
+      //federate.FederateSaveBegun();
+      //// Operations for Application Specific Saving of Federate State
+      //federate.FederateSaveComplete(true);
+      //federate.QueryFederationSaveStatus();
+      //federate.QueryFederationRestoreStatus();
+
+      //// DM services test
+      //federate.UnsubscribeObjectClass(federate.Som.ShipOC);
+      //List<HlaAttribute> attrs = new List<HlaAttribute>();
+      //attrs.Add(federate.Som.TrackOC.TrackHeading); attrs.Add(federate.Som.TrackOC.TrackSpeed);
+      //federate.UnsubscribeObjectClass(federate.Som.TrackOC, attrs);
+      //federate.UnpublishObjectClass(federate.Som.ShipOC);
+      //federate.UnpublishObjectClass(federate.Som.TrackOC, attrs);
+      //federate.UnsubscribeInteractionClass(federate.Som.RadioMessageIC);
+      //federate.UnpublishInteractionClass(federate.Som.RadioMessageIC);
 
       //// DDM tests
       //// DDM Initialization
@@ -117,17 +159,15 @@ namespace stms
       //federate.RequestAttributeValueUpdateWithRegions(federate.Som.ShipOC, pairs, "user-supplied tag");
       //federate.UnsubscribeObjectClassWithRegions(federate.Som.ShipOC, pairs);
 
-      //// FM tests
-      //// Federate Save and Restore
-      //federate.RequestFederationSave("Save_BeforeLunch");
-      //federate.FederateSaveBegun();
-      //// Operations for Application Specific Saving of Federate State
-      //federate.FederateSaveComplete(true);
-      //federate.QueryFederationSaveStatus();
-      //federate.QueryFederationRestoreStatus();
-      //// Support services
+      // Support Services Test
       //federate.Som.AreaOfResponsibility.Handle = federate.GetDimensionHandle(federate.Som.AreaOfResponsibility.Name);
       //federate.GetDimensionName(federate.Som.AreaOfResponsibility.Handle);
+      //federate.SetAutomaticResignDirective(ResignAction.DELETE_OBJECTS);
+      //ResignAction directive = federate.GetAutomaticResignDirective();
+      //double val = federate.GetUpdateRateValue("High");
+      //federate.DisableCallbacks();
+      //federate.EnableCallbacks();
+      //federate.NormalizeFederateHandle(federate.FederateHandle);
 
       // *************************************************
       // Main Simulation Loop - loops until ESC is pressed
@@ -176,7 +216,7 @@ namespace stms
       //federate.ModifyLookahead(3); // modify lookahead
       //Console.WriteLine("Lookahead: " + federate.QueryLookahead()); // modified lookahead
 
-      //federate.FlushQueueRequest(time + lookahead);
+      federate.FlushQueueRequest(time + lookahead);
 
       // *************************************************
       // Shutdown
@@ -306,7 +346,8 @@ namespace stms
       //station.Location = (LocationEnum)((pos == 0) ? LocationEnum.West : LocationEnum.West);
 
       // Quick Entry
-      station.StationName = "GB" + DateTime.Now.Second.ToString();
+      station.StationName = "GB";
+      //station.StationName = "GB" + DateTime.Now.Second.ToString();
       station.Location = LocationEnum.East;
       // Encapsulate 
       StationObjects.Add(station);

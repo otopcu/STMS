@@ -341,6 +341,7 @@ namespace stms
       base.FdAmb_TurnUpdatesOnForObjectInstanceAdvisedHandler(sender, data);
 
       #region User Code
+      //Report($"TurnUpdatesOnForObjectInstance is received. Update Rate Designator: {data.UpdateRateDesignator}" + Environment.NewLine);
       #endregion //User Code
     }
     public override void FdAmb_TurnUpdatesOffForObjectInstanceAdvisedHandler(object sender, HlaObjectEventArgs data)
@@ -428,7 +429,7 @@ namespace stms
       try
       {
         //SendInteraction(interaction);
-        MessageRetraction handle = SendInteraction(interaction, timestamp);
+        MessageRetraction handle = SendInteraction(interaction, "", timestamp);
         Retract(handle);
         return true;
       }

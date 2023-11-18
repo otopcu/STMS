@@ -13,6 +13,12 @@
 /// This file includes the enumerated data types.
 /// </summary>
 
+// System
+using System;
+using System.Collections.Generic;
+// Racon
+using Racon;
+using Racon.RtiLayer;
 namespace stms.Som
 {
   #region Enumerated Datatypes
@@ -41,4 +47,7 @@ namespace stms.Som
   #region User-added Dataypes
   public enum PacingEnum { SlowPacing, FastPacing }; // represents sync points
   #endregion
+
+
+
 }

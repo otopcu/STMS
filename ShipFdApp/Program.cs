@@ -7,12 +7,12 @@ using System.Text;
 using System.Threading;
 //Racon
 using Racon;
-using Racon.RtiLayer;
 // Application
 using stms.Som;
 
 namespace stms
 {
+  // This federate application uses Racon High-Level Methods
   class Program
   {
     // Globals
@@ -22,10 +22,11 @@ namespace stms
     static bool Terminate = false; // exit switch for app
     static double old_time = DateTime.Now.TimeOfDay.TotalSeconds;
     static bool test = false; // guard for testing for various RTI interface
+
     static void Main(string[] args)
     {
       // *************************************************
-      // Initialization
+      // Initialization with High-level Racon Services
       // *************************************************
       // Program initialization
 
@@ -47,12 +48,11 @@ namespace stms
       printConfiguration();// report to user
       ConsoleKeyListener.Start();// start keyboard event listener
 
-      // *************************************************
-      // Initialization
-      // *************************************************
       // Federation Initialization
       // connect, create and join to federation execution, declare object model
       bool result = manager.federate.InitializeFederation(manager.federate.FederationExecution);
+      //if (manager.federate.FederateState.HasFlag(FederateStates.JOINED)) // or alternatively use if (result)
+      //{
       // TM Initialization
       manager.federate.EnableAsynchronousDelivery();
       manager.federate.EnableTimeConstrained();
@@ -62,11 +62,6 @@ namespace stms
       else
         manager.federate.CreateEastRegion();
 
-      // FM Test
-      manager.federate.ListFederationExecutions();
-      //string name = federate.GetFederateName(federate.FederateHandle);
-      //federate.GetFederateHandle(name);
-
       // *************************************************
       // Main Simulation Loop - loops until ESC is pressed
       // *************************************************
@@ -74,8 +69,7 @@ namespace stms
       do
       {
         // process rti events (callbacks) and tick
-        if (manager.federate.FederateState.HasFlag(Racon.FederateStates.JOINED))
-          manager.federate.Run();
+        if (manager.federate.FederateState.HasFlag(FederateStates.JOINED)) manager.federate.Run();
 
         // Move our local ship
         ship.Move(GetTimeStep());
@@ -114,6 +108,7 @@ namespace stms
       } while (!Terminate && !ship.Exit);
 
       // TM Tests
+      /*
       manager.federate.DisableAsynchronousDelivery();
       manager.federate.DisableTimeConstrained();
       manager.federate.QueryLogicalTime();
@@ -124,6 +119,7 @@ namespace stms
       double lits;
       bool res4 = manager.federate.QueryLITS(out lits);
       bool res3 = manager.federate.QueryLITS();
+      */
 
       // *************************************************
       // Shutdown
@@ -133,10 +129,11 @@ namespace stms
       // Finalize Federation Execution
       // Remove objects
       manager.timer.Stop(); // stop reporting the ship position
-      manager.federate.DeleteObjectInstance(manager.ShipObjects[0]);
+      manager.federate.DeleteObjectInstance(manager.ShipObjects[0], Tags.deleteRemoveTag);
       // Leave and destroy federation execution
       bool result2 = manager.federate.FinalizeFederation(manager.federate.FederationExecution);
       //bool result2 = manager.federate.FinalizeFederation(manager.federate.FederationExecution, Racon.ResignAction.DELETE_OBJECTS);
+      //}
 
       // Dumb trace log
       StreamWriter file = new System.IO.StreamWriter(@".\TraceLog.txt");

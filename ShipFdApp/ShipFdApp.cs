@@ -427,7 +427,7 @@ namespace stms
       // Create region
       CreateRegion(aor1, dimensions);
       // Set range lower and upper bounds for each dimension
-      SetRangeBounds(aor1.Handle, Som.AreaOfResponsibility.Handle, 0, 0);
+      SetRangeBounds(aor1.Handle, Som.AreaOfResponsibility.Handle, 0, 1);
       // create a set of regions
       List<HlaRegion> regions = new List<HlaRegion>();
       regions.Add(aor1);

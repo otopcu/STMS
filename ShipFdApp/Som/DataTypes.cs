@@ -15,6 +15,8 @@
 
 namespace stms.Som
 {
+  //using HLAASCIIchar = System.Char;
+
   #region Enumerated Dataypes
   // Location Type
   public enum LocationEnum { West = 0, East = 1 };
